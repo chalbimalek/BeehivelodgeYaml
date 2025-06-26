@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beehive-lodge-reclamation
+  namespace: beehive-lodge-pfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beehive-lodge-reclamation
+  template:
+    metadata:
+      labels:
+        app: beehive-lodge-reclamation
+    spec:
+      containers:
+        - name: beehive-lodge-reclamation
+          image: depot.dpc.com.tn:8443/beehive_lodge/reclamation:v-0.0.122
+          ports:
+            - containerPort: 8005
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "250m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beehive-lodge-reclamation
+spec:
+  selector:
+    app: beehive-lodge-reclamation
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8005
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beehive-lodge-reclamation-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    - host: beehivelodge.reclamation.dpc.com.tn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: beehive-lodge-reclamation
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - beehivelodge.reclamation.dpc.com.tn
+      secretName: beehive-lodge-reclamation-tls-secret
+
+

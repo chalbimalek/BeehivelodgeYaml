@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beehive-lodge-notification
+  namespace: beehive-lodge-pfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beehive-lodge-notification
+  template:
+    metadata:
+      labels:
+        app: beehive-lodge-notification
+    spec:
+      containers:
+        - name: beehive-lodge-notification
+          image: depot.dpc.com.tn:8443/beehive_lodge/notifications:v-0.0.122
+          ports:
+            - containerPort: 8091
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beehive-lodge-notification
+  namespace: beehive-lodge-pfe
+spec:
+  selector:
+    app: beehive-lodge-notification
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8091
+  type: LoadBalancer
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beehive-lodge-notification-ingress
+  namespace: beehive-lodge-pfe
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    - host: beehivelodge.notification.dpc.com.tn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: beehive-lodge-notification
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - beehivelodge.notification.dpc.com.tn
+      secretName: beehive-lodge-notification-tls-secret

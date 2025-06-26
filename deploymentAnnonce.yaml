@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: beehive-lodge-annonce
+  namespace: beehive-lodge-pfe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: beehivelodge-annonce
+  template:
+    metadata:
+      labels:
+        app: beehivelodge-annonce
+    spec:
+      containers:
+        - name: beehive-lodge-annonce
+          image: depot.dpc.com.tn:8443/beehive_lodge/annonce:v-0.0.122
+          ports:
+            - containerPort: 8017
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "50m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: beehivelodge-annonce  # Changed the name to follow DNS-1035 rules
+spec:
+  selector:
+    app: beehivelodge-annonce  # Updated selector to match the new labels
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8017
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: beehivelodge-annonce-ingress  # Updated ingress name
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+spec:
+  rules:
+    - host: beehivelodge.annonce.dpc.com.tn  # Fixed typo here
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: beehivelodge-annonce  # Fixed service name
+                port:
+                  number: 80
+  tls:
+    - hosts:
+        - beehivelodge.annonce.dpc.com.tn  # Fixed typo here
+      secretName: beelodge-annonce-tls-secret
+
