@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-commentaire
-          image: depot.dpc.com.tn:8443/beehive_lodge/commentaire:v-0.0.122
+          image: malekch10/commentaireservice
           ports:
             - containerPort: 8002
 
