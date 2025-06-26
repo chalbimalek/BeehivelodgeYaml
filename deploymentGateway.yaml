@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-gateway
-          image: depot.dpc.com.tn:8443/beehive_lodge/gateway:v-0.0.122
+          image: malekch10/gatewayservice
           ports:
             - containerPort: 8083
 ---
