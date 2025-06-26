@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-notification
-          image: depot.dpc.com.tn:8443/beehive_lodge/notifications:v-0.0.122
+          image: malekch10/notificationsservice
           ports:
             - containerPort: 8091
           resources:
