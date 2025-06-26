@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-annonce
-          image: depot.dpc.com.tn:8443/beehive_lodge/annonce:v-0.0.122
+          image: malekch10/annonce
           ports:
             - containerPort: 8017
           resources:
