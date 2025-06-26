@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: beehive-lodge-notification
-  namespace: beehive-lodge-pfe
+  namespace: default
 spec:
   replicas: 1
   selector:
