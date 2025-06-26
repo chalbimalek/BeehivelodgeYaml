@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-userservice
-          image: depot.dpc.com.tn:8443/beehive_lodge/user:v-0.0.122
+          image: malekch10/userservice
           ports:
             - containerPort: 8080
 ---
