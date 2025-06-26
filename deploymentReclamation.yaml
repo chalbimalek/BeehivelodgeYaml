@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: beehive-lodge-reclamation
-          image: depot.dpc.com.tn:8443/beehive_lodge/reclamation:v-0.0.122
+          image: malekch10/reclamation
           ports:
             - containerPort: 8005
           resources:
